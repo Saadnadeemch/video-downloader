@@ -1,0 +1,42 @@
+.animate-fadeIn {
+  animation: fadeInDropdown 0.18s;
+}
+@keyframes fadeInDropdown {
+  from { opacity: 0; transform: translateY(-8px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* Progress bar minimal */
+.bg-gradient-to-r.from-gray-100.to-gray-200 {
+  background: linear-gradient(to right, #f3f4f6, #e5e7eb);
+}
+.bg-gradient-to-r.from-purple-500.to-indigo-500 {
+  background: linear-gradient(to right, #a78bfa, #6366f1);
+  box-shadow: 0 0 4px #7c3aed66;
+}
+
+/* Minimal button shadow */
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #c4b5fd50;
+}
+
+/* Download icon */
+button svg {
+  vertical-align: middle;
+}
+
+/* Download button minimal */
+.bg-gradient-to-r.from-emerald-500.to-green-500 {
+  background: linear-gradient(to right, #10b981, #22c55e);
+}
+
+/* Hide scrollbars on dropdown for cleaner UI */
+ul.max-h-52::-webkit-scrollbar {
+  width: 4px;
+  background: #f3f4f6;
+}
+ul.max-h-52::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}

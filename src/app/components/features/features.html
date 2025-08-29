@@ -1,0 +1,60 @@
+<section class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        Why Choose
+        <span class="block bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          VideoFlow?
+        </span>
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Experience the most advanced video downloading platform with cutting-edge features
+        designed for speed, security, and convenience.
+      </p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div
+        *ngFor="let feature of features"
+        class="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 group border border-gray-100"
+      >
+        <div
+          class="w-16 h-16 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
+          [ngClass]="'bg-gradient-to-r ' + feature.color"
+        >
+          <span class="text-2xl">{{ feature.icon }}</span>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">
+          {{ feature.title }}
+        </h3>
+        <p class="text-gray-600 leading-relaxed">
+          {{ feature.description }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="mt-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-8 text-center text-white">
+      <h3 class="text-3xl font-bold mb-4">Ready to Get Started?</h3>
+      <p class="text-xl mb-6 opacity-90">
+        Join millions of users who trust VideoFlow for their video downloading needs
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">⭐⭐⭐⭐⭐</span>
+          <span class="font-semibold">4.9/5 Rating</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">👥</span>
+          <span class="font-semibold">10M+ Happy Users</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">📱</span>
+          <span class="font-semibold">All Devices Supported</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

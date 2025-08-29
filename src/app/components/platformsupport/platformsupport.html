@@ -1,0 +1,58 @@
+<section class="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        Download from
+        <span
+          class="block bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
+        >
+          1000+ Platforms
+        </span>
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        VideoFlow supports all major video platforms and social media sites.
+        Download videos, audio, and content from anywhere on the internet.
+      </p>
+    </div>
+
+    <!-- Platforms Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+      <div
+        *ngFor="let platform of platforms; let i = index"
+        class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100"
+      >
+        <div
+          class="w-16 h-16 bg-gradient-to-r {{ platform.color }} rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg"
+        >
+          {{ platform.logo }}
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-1">
+          {{ platform.name }}
+        </h3>
+        <p class="text-sm text-gray-600 font-medium">
+          {{ platform.users }} users
+        </p>
+      </div>
+    </div>
+
+    <!-- Extra Platforms -->
+    <div class="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+      <div class="text-center">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">
+          And 1000+ More Platforms
+        </h3>
+        <div
+          class="flex flex-wrap justify-center gap-3 text-sm text-gray-600"
+        >
+          <span
+            *ngFor="let item of extraPlatforms"
+            class="bg-gray-100 px-4 py-2 rounded-full"
+          >
+            {{ item }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

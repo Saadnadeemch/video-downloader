@@ -1,0 +1,59 @@
+<section class="py-20 bg-gradient-to-b from-gray-50 to-white">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-14">
+      <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+        Frequently Asked
+        <span class="block bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          Questions
+        </span>
+      </h2>
+      <p class="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+        Find answers to the most common questions about <span class="font-semibold">VideoFlow Downloader</span>.
+      </p>
+    </div>
+
+    <!-- Accordion -->
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 divide-y divide-gray-100 overflow-hidden">
+      <div *ngFor="let faq of faqs; let i = index" class="group">
+        <button
+          (click)="toggle(i)"
+          class="w-full flex justify-between items-center py-5 px-6 text-left text-gray-900 font-semibold hover:text-indigo-600 transition-all focus:outline-none"
+        >
+          <span>{{ faq.question }}</span>
+          <span
+            class="transform transition-transform duration-300 text-gray-400 group-hover:text-indigo-500"
+            [class.rotate-180]="openIndex === i"
+          >
+            ▼
+          </span>
+        </button>
+        <div
+          *ngIf="openIndex === i"
+          class="px-6 pb-5 text-gray-600 text-sm md:text-base leading-relaxed animate-fadeIn"
+        >
+          {{ faq.answer }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Card -->
+    <div class="mt-12">
+      <div
+        class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 shadow-lg text-center text-white relative overflow-hidden"
+      >
+        <div class="absolute inset-0 bg-[url('/assets/pattern.svg')] opacity-10"></div>
+        <h3 class="text-xl font-bold mb-2 relative">Still have questions?</h3>
+        <p class="text-indigo-100 mb-5 text-sm md:text-base relative">
+          Our friendly support team is available 24/7 to help you.
+        </p>
+        <a
+          routerLink="/contact"
+          class="inline-block px-6 py-3 bg-white text-indigo-700 font-semibold rounded-lg shadow hover:bg-gray-100 transition-colors duration-200 relative"
+        >
+          Contact Support
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
