@@ -1,9 +1,10 @@
-import { Component, HostListener, ElementRef, OnDestroy } from '@angular/core';
+import { Component, HostListener, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Navbar } from '../../components/navbar/navbar';
 import { environment } from '../../../environment/environment';
 import { Fetchinfo } from '../../services/fetchinfo';
+import { Meta, Title } from '@angular/platform-browser';
 
 interface AudioInfo {
   thumbnail: string;
@@ -25,7 +26,7 @@ interface AudioInfo {
   templateUrl: './mp3.html',
   styleUrl: './mp3.css'
 })
-export class Mp3 implements OnDestroy {
+export class Mp3 implements OnDestroy , OnInit {
   url = '';
   isLoading = false;
   audioInfo: AudioInfo | null = null;
@@ -46,9 +47,18 @@ export class Mp3 implements OnDestroy {
 
   constructor(
     private fetchinfo: Fetchinfo,
-    private el: ElementRef
+    private el: ElementRef,
+    private title : Title,
+    private  meta : Meta
   ) {}
 
+ngOnInit(): void {
+    this.title.setTitle("Downlaod Youtube Mp3 Online Free ")
+    this.meta.updateTag({
+      name: 'description',
+      content: 'Download Mp3 from YouTube, TikTok, Instagram, and Facebook and Others easily using VideoSaver.'
+    })
+  }
   async handlePaste() {
     try {
       this.url = await navigator.clipboard.readText();

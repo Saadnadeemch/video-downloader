@@ -1,0 +1,12 @@
+User-agent: *
+# Allow important pages
+Allow: /home
+Allow: /mp3
+Allow: /contact
+Allow: /user
+
+# Disallow everything else
+Disallow: /
+
+# Sitemap
+Sitemap: https://prodownloader.online/sitemap.xml
