@@ -8,7 +8,7 @@ import { log } from 'console';
 
 // Core video metadata (only about the video itself)
 interface VideoInfo {
-  url : string;
+  url: string;
   thumbnail: string;
   title: string;
   uploader: string;
@@ -25,7 +25,8 @@ interface VideoInfo {
 // Full backend response wrapper
 interface VideoInfoResponse {
   websocket_id: string;
-  type: 'separate-av' | 'stream-download' | 'direct-download';
+  // type: 'separate-av' | 'stream-download' | 'direct-download';
+  type: 'separate-av' 
   video_info: VideoInfo;
 }
 
@@ -40,8 +41,9 @@ export class Searchbox implements OnDestroy {
   url = '';
   isLoading = false;
   videoInfo: VideoInfo | null = null;
-  platformType: 'separate-av' | 'stream-download' | 'direct-download' | null = null;
+  // platformType: 'separate-av' | 'stream-download' | 'direct-download' | null = null;
 
+  platformType: 'separate-av' | null = null;
   selectedQuality = '720p';
   downloadText = 'Download Now';
   progressPercent = 0;
@@ -237,17 +239,17 @@ export class Searchbox implements OnDestroy {
     document.body.removeChild(link);
   }
 
- 
 
- 
+
+
 
   ngOnDestroy() {
     this.ws?.close();
-}
+  }
 
   handleDirectDownload(): void {
-    if (!this.videoInfo?.downloadUrl  || !this.videoInfo?.title) {
-      console.log(this.videoInfo?.downloadUrl , this.videoInfo?.title)
+    if (!this.videoInfo?.downloadUrl || !this.videoInfo?.title) {
+      console.log(this.videoInfo?.downloadUrl, this.videoInfo?.title)
       this.errorMessage = 'Missing video information';
       return;
     }
@@ -256,7 +258,7 @@ export class Searchbox implements OnDestroy {
       this.showProgress = true;
       this.downloadText = 'Starting...';
 
-      this.fetchinfo.directDownload(this.videoInfo.downloadUrl , this.videoInfo.title);
+      this.fetchinfo.directDownload(this.videoInfo.downloadUrl, this.videoInfo.title);
 
       this.downloadText = 'Download Started';
     } catch (err) {
@@ -267,7 +269,7 @@ export class Searchbox implements OnDestroy {
     }
   }
 
-handleStream() {
+  handleStream() {
     if (!this.videoInfo?.url || !this.videoInfo?.title) {
       this.errorMessage = 'Missing video information';
       return;
