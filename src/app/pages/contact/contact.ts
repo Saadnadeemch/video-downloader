@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Navbar } from '../../components/navbar/navbar';
 import { Meta, Title } from '@angular/platform-browser';
+import { EmailService } from '../../services/email';
+import { FastForward } from 'lucide-angular';
 
 interface ContactInfo {
   icon: string;
@@ -10,28 +12,32 @@ interface ContactInfo {
   description: string;
   detail: string;
 }
+
 @Component({
   selector: 'app-contact',
-  imports: [CommonModule , FormsModule , Navbar, ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, Navbar, ReactiveFormsModule],
   templateUrl: './contact.html',
-  styleUrl: './contact.css'
+  styleUrl: './contact.css',
 })
 export class Contact implements OnInit {
   contactForm: FormGroup;
   isSubmitting = false;
   isSubmitted = false;
+  errorMessage = false;
+  emailService = inject(EmailService);
 
   contactInfo: ContactInfo[] = [
     {
       icon: 'mail',
       title: 'Email Us',
-      description: 'support@videoflow.com',
+      description: 'prodownloaderonline@gmail.com',
       detail: 'We respond within 24 hours',
     },
     {
       icon: 'message-square',
       title: 'Live Chat',
-      description: 'Available 24/7',
+      description: 'Available 24/7',  
       detail: 'Get instant help from our team',
     },
     {
@@ -42,7 +48,7 @@ export class Contact implements OnInit {
     },
   ];
 
-  constructor(private fb: FormBuilder , private title : Title , private meta : Meta) {
+  constructor(private fb: FormBuilder, private title: Title, private meta: Meta) {
     this.contactForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -52,26 +58,34 @@ export class Contact implements OnInit {
   }
 
   ngOnInit(): void {
-    this.title.setTitle("Contact to VideoSaverOnline if you face any issue ")
+    this.title.setTitle('Contact to VideoSaverOnline if you face any issue');
     this.meta.updateTag({
       name: 'description',
-      content: 'If you face any issue in downloading the video from videosaver.online then contact .'
-    })
-}
+      content:
+        'If you face any issue in downloading the video from videosaver.online then contact .',
+    });
+  }
 
   async onSubmit() {
     if (this.contactForm.invalid) return;
     this.isSubmitting = true;
 
-    // Simulate API call
-    setTimeout(() => {
-      this.isSubmitting = false;
+    try {
+      await this.emailService.sendEmail(this.contactForm.value);
       this.isSubmitted = true;
       this.contactForm.reset();
-    }, 1500);
+      console.log('✅ Email sent successfully');
+    } catch (error) {
+      console.error('❌ Failed to send email:', error);
+      this.errorMessage = true
+    } finally {
+      this.isSubmitting = false;
+      this.errorMessage = false
+    }
   }
 
   resetForm() {
     this.isSubmitted = false;
+    this.contactForm.reset();
   }
 }

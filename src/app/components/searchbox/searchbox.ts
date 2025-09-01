@@ -26,7 +26,7 @@ interface VideoInfo {
 interface VideoInfoResponse {
   websocket_id: string;
   // type: 'separate-av' | 'stream-download' | 'direct-download';
-  type: 'separate-av' 
+  // type: 'separate-av' 
   video_info: VideoInfo;
 }
 
@@ -43,7 +43,8 @@ export class Searchbox implements OnDestroy {
   videoInfo: VideoInfo | null = null;
   // platformType: 'separate-av' | 'stream-download' | 'direct-download' | null = null;
 
-  platformType: 'separate-av' | null = null;
+  // platformType: 'separate-av' | null = null;
+
   selectedQuality = '720p';
   downloadText = 'Download Now';
   progressPercent = 0;
@@ -122,7 +123,7 @@ export class Searchbox implements OnDestroy {
           websocketId: data.websocket_id,
         };
 
-        this.platformType = data.type; // ✅ separate field
+        // this.platformType = data.type; // ✅ separate field
         this.connectWebSocket(data.websocket_id);
       },
       error: (err) => {

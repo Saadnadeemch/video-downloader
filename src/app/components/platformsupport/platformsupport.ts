@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 interface Platform {
   name: string;
@@ -10,7 +11,7 @@ interface Platform {
 
 @Component({
   selector: 'app-platformsupport',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './platformsupport.html',
   styleUrl: './platformsupport.css'
 })
@@ -50,7 +51,7 @@ getIconPath(icon: string): string {
     case 'vimeo':
       return "M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.522 3.01 7.522c-.179 0-.806.378-1.881 1.132L0 7.197c1.185-1.044 2.351-2.084 3.501-3.128C5.08 2.701 6.266 1.984 7.055 1.91c1.867-.18 3.016 1.1 3.447 3.838.465 2.953.789 4.789.971 5.507.539 2.45 1.131 3.674 1.776 3.674.502 0 1.258-.796 2.267-2.385 1.010-1.589 1.552-2.794 1.624-3.615.144-1.371-.395-2.061-1.615-2.061-.576 0-1.162.121-1.759.379 1.167-3.831 3.407-5.698 6.718-5.611 2.455.06 3.608 1.664 3.493 4.797z";
     case 'dailymotion': // Fixed
-      return "M2 3.5A1.5 1.5 0 0 1 3.5 2h17A1.5 1.5 0 0 1 22 3.5v17a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 20.5v-17zm9.5 4v9l6-4.5-6-4.5z";
+      return "M5 3v18l15-9L5 3z"
     case 'twitch':
       return "M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z";
     case 'reddit':

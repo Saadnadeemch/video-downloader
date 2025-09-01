@@ -14,7 +14,7 @@
       </h1>
       <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
         Have questions, feedback, or need help? We're here to assist you
-        with anything related to VideoFlow.
+        with anything related to ProDownloader
       </p>
     </div>
 
@@ -29,121 +29,94 @@
         </div>
 
         <div class="p-6">
-          <ng-container *ngIf="isSubmitted; else formBlock">
-            <div class="text-center py-8">
-              <div
-                class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"
-              >
-                <i class="lucide lucide-send w-8 h-8 text-green-600"></i>
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Name -->
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                  Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  formControlName="name"
+                  class="h-12 border-2 border-gray-200 focus:border-blue-500 rounded-xl w-full px-3"
+                  placeholder="Your full name"
+                />
               </div>
-              <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                Message Sent!
-              </h3>
-              <p class="text-gray-600">
-                Thank you for reaching out. We'll get back to you within 24 hours.
-              </p>
-              <button
-                (click)="resetForm()"
-                class="mt-4 border rounded-xl px-4 py-2 hover:bg-gray-100"
-              >
+              <!-- Email -->
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  formControlName="email"
+                  class="h-12 border-2 border-gray-200 focus:border-blue-500 rounded-xl w-full px-3"
+                  placeholder="your@email.com"
+                />
+              </div>
+            </div>
+
+            <!-- Subject -->
+            <div>
+              <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
+                Subject
+              </label>
+              <input
+                id="subject"
+                type="text"
+                formControlName="subject"
+                class="h-12 border-2 border-gray-200 focus:border-blue-500 rounded-xl w-full px-3"
+                placeholder="What is this about?"
+              />
+            </div>
+
+            <!-- Message -->
+            <div>
+              <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+                Message
+              </label>
+              <textarea
+                id="message"
+                formControlName="message"
+                rows="6"
+                class="border-2 border-gray-200 focus:border-blue-500 rounded-xl resize-none w-full px-3 py-2"
+                placeholder="Tell us how we can help you..."
+              ></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              [disabled]="isSubmitting"
+              class="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <i class="lucide lucide-send w-4 h-4" [ngClass]="{ 'animate-pulse': isSubmitting }"></i>
+              {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+            </button>
+
+            <!-- Success Message -->
+            <div *ngIf="isSubmitted && !errorMessage" class="mt-4 text-center">
+              <div class="text-green-600 font-medium">✅ Message sent successfully!</div>
+              <button (click)="resetForm()" type="button" class="mt-2 border rounded-xl px-4 py-2 hover:bg-gray-100">
                 Send Another Message
               </button>
             </div>
-          </ng-container>
 
-          <ng-template #formBlock>
-            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Name -->
-                <div>
-                  <label
-                    for="name"
-                    class="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Name
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    formControlName="name"
-                    class="h-12 border-2 border-gray-200 focus:border-blue-500 rounded-xl w-full px-3"
-                    placeholder="Your full name"
-                  />
-                </div>
-                <!-- Email -->
-                <div>
-                  <label
-                    for="email"
-                    class="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    formControlName="email"
-                    class="h-12 border-2 border-gray-200 focus:border-blue-500 rounded-xl w-full px-3"
-                    placeholder="your@email.com"
-                  />
-                </div>
-              </div>
-
-              <!-- Subject -->
-              <div>
-                <label
-                  for="subject"
-                  class="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Subject
-                </label>
-                <input
-                  id="subject"
-                  type="text"
-                  formControlName="subject"
-                  class="h-12 border-2 border-gray-200 focus:border-blue-500 rounded-xl w-full px-3"
-                  placeholder="What is this about?"
-                />
-              </div>
-
-              <!-- Message -->
-              <div>
-                <label
-                  for="message"
-                  class="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  formControlName="message"
-                  rows="6"
-                  class="border-2 border-gray-200 focus:border-blue-500 rounded-xl resize-none w-full px-3 py-2"
-                  placeholder="Tell us how we can help you..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                [disabled]="isSubmitting"
-                class="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
-              >
-                <i
-                  class="lucide lucide-send w-4 h-4"
-                  [ngClass]="{ 'animate-pulse': isSubmitting }"
-                ></i>
-                {{ isSubmitting ? 'Sending...' : 'Send Message' }}
-              </button>
-            </form>
-          </ng-template>
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="mt-4 text-center text-red-600 font-medium">
+              ❌ Failed to send message. Please try again.
+            </div>
+          </form>
         </div>
       </div>
 
       <!-- Contact Information -->
       <div class="space-y-8">
         <div>
-          <h2 class="text-3xl font-bold text-gray-900 mb-6">
-            Contact Information
-          </h2>
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">Contact Information</h2>
           <p class="text-lg text-gray-600 mb-8">
             Choose the best way to reach us. We're always happy to help!
           </p>
@@ -204,13 +177,11 @@
 <footer class="bg-gray-900 text-white py-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <div class="mb-8">
-      <h3 class="text-2xl font-bold mb-2">VideoFlow</h3>
-      <p class="text-gray-400">We're here to help you succeed</p>
+      <h3 class="text-2xl font-bold mb-2">ProDownloader</h3>
+      <p class="text-gray-400">We're here to help to downlaod faster</p>
     </div>
     <div class="border-t border-gray-800 pt-6">
-      <p class="text-gray-400">
-        © 2025 VideoFlow. All rights reserved.
-      </p>
+      <p class="text-gray-400">© 2025 ProDownloader. All rights reserved.</p>
     </div>
   </div>
 </footer>
