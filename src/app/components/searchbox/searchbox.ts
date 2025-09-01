@@ -4,8 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { Fetchinfo } from '../../services/fetchinfo';
 import { LucideAngularModule } from 'lucide-angular';
 import { environment } from '../../../environment/environment';
+import { log } from 'console';
 
+// Core video metadata (only about the video itself)
 interface VideoInfo {
+  url : string;
   thumbnail: string;
   title: string;
   uploader: string;
@@ -19,6 +22,13 @@ interface VideoInfo {
   fileName?: string | null;
 }
 
+// Full backend response wrapper
+interface VideoInfoResponse {
+  websocket_id: string;
+  type: 'separate-av' | 'stream-download' | 'direct-download';
+  video_info: VideoInfo;
+}
+
 @Component({
   selector: 'app-searchbox',
   standalone: true,
@@ -30,6 +40,8 @@ export class Searchbox implements OnDestroy {
   url = '';
   isLoading = false;
   videoInfo: VideoInfo | null = null;
+  platformType: 'separate-av' | 'stream-download' | 'direct-download' | null = null;
+
   selectedQuality = '720p';
   downloadText = 'Download Now';
   progressPercent = 0;
@@ -53,10 +65,9 @@ export class Searchbox implements OnDestroy {
   constructor(
     private fetchinfo: Fetchinfo,
     private el: ElementRef
-  ) {}
+  ) { }
 
   selectQuality(q: string) {
-    console.log(`🎚️ Quality selected: ${q}`);
     this.selectedQuality = q;
     this.showDropdown = false;
   }
@@ -64,7 +75,6 @@ export class Searchbox implements OnDestroy {
   toggleDropdown(event?: MouseEvent) {
     if (event) event.stopPropagation();
     this.showDropdown = !this.showDropdown;
-    console.log(`📂 Dropdown ${this.showDropdown ? 'opened' : 'closed'}`);
   }
 
   @HostListener('document:click', ['$event'])
@@ -78,7 +88,6 @@ export class Searchbox implements OnDestroy {
   async handlePaste() {
     try {
       this.url = await navigator.clipboard.readText();
-      console.log(`📋 Pasted URL: ${this.url}`);
     } catch (err) {
       console.error('❌ Failed to read clipboard:', err);
     }
@@ -86,8 +95,6 @@ export class Searchbox implements OnDestroy {
 
   handleDownloadRequest() {
     if (!this.url.trim()) return;
-
-    console.log(`➡️ Download request for URL: ${this.url}`);
 
     this.isLoading = true;
     this.videoInfo = null;
@@ -104,21 +111,16 @@ export class Searchbox implements OnDestroy {
     }
 
     this.fetchinfo.getVideoInfo(this.url, this.selectedQuality, this.requestId).subscribe({
-      next: (data) => {
+      next: (data: VideoInfoResponse) => {
         console.log('ℹ️ Video info received:', data);
 
+        // Assign response
         this.videoInfo = {
-          thumbnail: data.video_info.thumbnail ,
-          title: data.video_info.title,
-          uploader: data.video_info.uploader,
-          platform: data.video_info.platform,
-          description: data.video_info.description,
-          duration: data.video_info.duration || 'N/A',
-          views: data.video_info.views || 'N/A',
-          likes: data.video_info.like_count || 'N/A',
-          downloadUrl: '',
+          ...data.video_info,
           websocketId: data.websocket_id,
         };
+
+        this.platformType = data.type; // ✅ separate field
         this.connectWebSocket(data.websocket_id);
       },
       error: (err) => {
@@ -134,11 +136,9 @@ export class Searchbox implements OnDestroy {
   }
 
   private connectWebSocket(id: string) {
-    console.log(`🔗 Connecting WebSocket with ID: ${id}`);
     this.ws = new WebSocket(`${this.wsBaseUrl}/${id}`);
 
     this.ws.onopen = () => {
-      console.log('✅ WebSocket connected');
       this.showProgress = true;
       this.downloadText = 'Preparing For Download';
     };
@@ -154,7 +154,6 @@ export class Searchbox implements OnDestroy {
 
       if (typeof msg === 'object') {
         if (msg.status === 'error') {
-          console.error('❌ Download error:', msg.message);
           this.downloadText = 'Error';
           this.errorMessage = msg.message || 'An error occurred.';
           this.showProgress = false;
@@ -218,7 +217,6 @@ export class Searchbox implements OnDestroy {
       console.warn('⚠️ WebSocket closed');
       if (this.progressPercent < 100 && !this.downloadReady) {
         this.downloadText = 'Disconnected';
-        this.errorMessage = 'WebSocket closed before completion.';
       }
     };
   }
@@ -230,7 +228,6 @@ export class Searchbox implements OnDestroy {
     }
     console.log(`⬇️ Triggering download: ${this.downloadUrl}`);
 
-    // ✅ Trigger direct request instead of opening new tab
     const link = document.createElement('a');
     link.href = this.downloadUrl;
     link.download = this.fileName || 'video.mp4';
@@ -240,8 +237,57 @@ export class Searchbox implements OnDestroy {
     document.body.removeChild(link);
   }
 
+ 
+
+ 
+
   ngOnDestroy() {
-    console.log('♻️ Destroying component, closing WebSocket');
     this.ws?.close();
+}
+
+  handleDirectDownload(): void {
+    if (!this.videoInfo?.downloadUrl  || !this.videoInfo?.title) {
+      console.log(this.videoInfo?.downloadUrl , this.videoInfo?.title)
+      this.errorMessage = 'Missing video information';
+      return;
+    }
+
+    try {
+      this.showProgress = true;
+      this.downloadText = 'Starting...';
+
+      this.fetchinfo.directDownload(this.videoInfo.downloadUrl , this.videoInfo.title);
+
+      this.downloadText = 'Download Started';
+    } catch (err) {
+      this.errorMessage = 'Failed to start download';
+      console.error(err);
+    } finally {
+      this.showProgress = false;
+    }
+  }
+
+handleStream() {
+    if (!this.videoInfo?.url || !this.videoInfo?.title) {
+      this.errorMessage = 'Missing video information';
+      return;
+    }
+
+    try {
+      this.showProgress = true;
+      this.downloadText = 'Starting...';
+
+      this.fetchinfo.startStream(
+        this.videoInfo.url,
+        this.videoInfo.title
+      );
+
+      this.downloadText = 'Download Started';
+    } catch (err) {
+      this.errorMessage = 'Failed to start download';
+      console.error(err);
+    } finally {
+      this.showProgress = false;
+    }
   }
 }

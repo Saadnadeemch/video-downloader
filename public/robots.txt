@@ -1,6 +1,6 @@
 User-agent: *
 # Allow important pages
-Allow: /home
+Allow: /
 Allow: /mp3
 Allow: /contact
 Allow: /user

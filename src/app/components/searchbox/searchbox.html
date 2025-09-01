@@ -8,32 +8,34 @@
       </p>
     </div>
 
-    
+
 
     <div class="flex flex-col md:flex-row gap-3 md:gap-4 items-stretch md:items-center">
       <!-- Input -->
       <div class="relative flex-1 group">
-        <input type="text" [(ngModel)]="url" placeholder="Paste video link here"
-          class="h-12 md:h-16 pl-4 md:pl-6 pr-12 md:pr-16 text-base md:text-lg 
+        <input type="text" [(ngModel)]="url" placeholder="Paste video link here" class="h-12 md:h-16 pl-4 md:pl-6 pr-12 md:pr-16 text-base md:text-lg 
                  border border-gray-200 rounded-xl md:rounded-2xl bg-gray-50 
                  transition-all duration-300 w-full
                  focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white" />
 
         <!-- Paste button -->
-        <button type="button" *ngIf="!url; else clearButton" (click)="handlePaste()"
-          class="absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2 h-8 w-8 md:h-10 md:w-10 p-0 hover:bg-purple-100 rounded-lg md:rounded-xl transition-all duration-200 flex items-center justify-center text-xl"
-          title="Paste from clipboard">
-          📋
+        <button type="button" *ngIf="!url; else clearButton" (click)="handlePaste()" class="absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2
+         h-8 w-8 md:h-10 md:w-10 p-0 rounded-lg md:rounded-xl
+         hover:bg-purple-100 transition-all duration-200
+         flex items-center justify-center text-xl" title="Paste from clipboard">
+          <img src="paste-icon.png" class="h-8" alt="">
         </button>
 
         <!-- Clear button -->
         <ng-template #clearButton>
-          <button type="button" (click)="url = ''"
-            class="absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2 h-8 w-8 md:h-10 md:w-10 p-0 hover:bg-red-100 rounded-lg md:rounded-xl transition-all duration-200 flex items-center justify-center text-xl text-red-500"
-            title="Clear input">
-            ❌
+          <button type="button" (click)="url = ''" class="absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2
+           h-8 w-8 md:h-10 md:w-10 p-0 rounded-lg md:rounded-xl
+           hover:bg-purple-100 transition-all duration-200
+           flex items-center justify-center text-xl font-bold text-gray-700" title="Clear input">
+            <img src="remove-icon.png" class="h-10" alt="">
           </button>
         </ng-template>
+
       </div>
 
       <!-- Quality Dropdown -->
@@ -88,29 +90,26 @@
   </div>
 
   <!-- Video Info -->
-  <div *ngIf="videoInfo"
-    class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 md:p-8 border border-gray-100">
+  <div *ngIf="videoInfo" class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 md:p-8 border border-gray-100">
     <div class="flex flex-col lg:flex-row gap-6 md:gap-8">
       <!-- Thumbnail -->
-     <div class="w-full lg:w-80 flex-shrink-0">
-  <img 
-    [src]="videoInfo.thumbnail || 'default.jpg'" 
-    [alt]="videoInfo.title || 'Default Thumbnail'"
-    class="w-full h-36 md:h-48 object-cover rounded-xl md:rounded-2xl shadow-lg" />
-</div>
+      <div class="w-full lg:w-80 flex-shrink-0">
+        <img [src]="videoInfo.thumbnail || 'default.jpg'" [alt]="videoInfo.title || 'Default Thumbnail'"
+          class="w-full h-36 md:h-48 object-cover rounded-xl md:rounded-2xl shadow-lg" />
+      </div>
 
-      <!-- Info & Progress -->
+      <!-- Info & Buttons -->
       <div class="flex-1">
         <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-2 md:mb-4 leading-tight">{{ videoInfo.title }}</h3>
         <div class="flex flex-wrap items-center gap-3 md:gap-6 mb-4 text-gray-600 text-sm md:text-base">
-          <span class="flex items-center gap-2 font-semibold">Auther : {{ videoInfo.uploader }}</span>
+          <span class="flex items-center gap-2 font-semibold">Author : {{ videoInfo.uploader }}</span>
           <span>{{ videoInfo.views }} views</span>
           <span>{{ videoInfo.likes }} likes</span>
         </div>
 
-        <!-- Progress / Download / Error -->
-        <div *ngIf="showProgress || errorMessage || downloadReady" class="space-y-3 md:space-y-4">
-          <!-- Progress Bar -->
+        <!-- Case 1: separated-av -->
+        <div *ngIf="platformType === 'separate-av'" class="space-y-3 md:space-y-4">
+          <!-- Progress Bar (only for separated-av) -->
           <div *ngIf="showProgress"
             class="w-full md:max-w-xl h-[15px] rounded-full bg-gray-200 overflow-hidden shadow-inner">
             <div class="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-500"
@@ -118,29 +117,44 @@
           </div>
 
           <!-- Download Button -->
-          <button (click)="downloadReady ? handleDownloadFile() : null"
-            class="w-full md:w-auto font-semibold rounded-full py-2 px-6 shadow-lg transition-all duration-300 
-                   text-sm md:text-base flex items-center justify-center gap-2 text-white
-                   bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
+          <button (click)="downloadReady ? handleDownloadFile() : null" class="w-full md:w-auto font-semibold rounded-full py-2 px-6 shadow-lg transition-all duration-300 
+                  text-sm md:text-base flex items-center justify-center gap-2 text-white
+                  bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
             <svg *ngIf="downloadReady" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
               viewBox="0 0 24 24">
               <path d="M4 12l1.41-1.41L11 16.17V4h2v12.17l5.59-5.58L20 12l-8 8-8-8z"></path>
             </svg>
             {{ downloadReady ? 'Save To Device' : downloadText }}
           </button>
+        </div>
+        <!-- Case 2: stream-download -->
+        <div *ngIf="platformType === 'stream-download'" class="space-y-3 md:space-y-4">
+          <button (click)="handleStream()" class="w-full md:w-auto font-semibold rounded-full py-2 px-6 shadow-lg transition-all duration-300
+          text-sm md:text-base flex items-center justify-center gap-2 text-white
+          bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
+            Stream Now
+          </button>
+        </div>
 
-          <!-- Error Message (download error) -->
-          <div *ngIf="errorMessage && !showProgress"
-            class="flex items-center justify-center gap-2 bg-red-100 text-red-600 px-4 py-2 rounded-md text-sm text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
-            </svg>
-            {{ errorMessage }}
-          </div>
+        <!-- Case 3: direct-download -->
+        <div *ngIf="platformType === 'direct-download'" class="space-y-3 md:space-y-4">
+          <button (click)="handleDirectDownload()" class="w-full md:w-auto font-semibold rounded-full py-2 px-6 shadow-lg transition-all duration-300
+          text-sm md:text-base flex items-center justify-center gap-2 text-white
+          bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
+            Direct Download
+          </button>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage"
+          class="flex items-center justify-center gap-2 bg-red-100 text-red-600 px-4 py-2 rounded-md text-sm text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+          </svg>
+          {{ errorMessage }}
         </div>
       </div>
     </div>
   </div>
-</div>
