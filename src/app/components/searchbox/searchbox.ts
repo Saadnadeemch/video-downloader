@@ -130,7 +130,7 @@ export class Searchbox implements OnDestroy {
 
           case 'direct-download':
             if (this.videoInfo.downloadUrl) {
-              this.handleDirectDownload();
+              // this.handleDirectDownload();
             } else {
               this.errorMessage = 'No direct download URL provided.';
               this.downloadText = 'Download Failed';
@@ -139,7 +139,7 @@ export class Searchbox implements OnDestroy {
 
           case 'stream-download':
             if (this.videoInfo.url) {
-              this.handleStream();
+              // this.handleStream();
             } else {
               this.errorMessage = 'No stream URL provided.';
               this.downloadText = 'Download Failed';
