@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://prodl.site',
-  wsBaseUrl: 'wss://prodl.site/ws'
+  baseUrl: 'https://prodl.site/api',
+  wsBaseUrl: 'wss://prodl.site/api/ws'
 };
 
 // export const environment = {
