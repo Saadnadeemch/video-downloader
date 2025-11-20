@@ -1,59 +1,80 @@
-# Downloader
+# 🚀 Downloader Frontend  
+> Angular 18 + Tailwind CSS + Angular Universal (SSR)  
+> One repo – three download modes: **Direct** | **Stream** | **Separated AV**  
+> Plug-and-play with any backend by changing one line.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.1.
+---
+# Backend Repi : "https://github.com/Saadnadeemch/downloader-backend"
 
-## Development server
+## 📌 TL;DR
+| Mode | Use-case | Open-source backend | Status |
+|---|---|---|---|
+| **Direct** | Instant HTTP download | ✅ [Go repo](https://github.com/Saadnadeemch/downloader-backend) | shipped |
+| **Stream** | WebSocket progress bar | ❌ (guide below) | DIY |
+| **Separated AV** | 4K video + audio merge | ❌ (guide below) | DIY |
 
-To start a local development server, run:
+Clone → `npm i` → set `apiUrl` → `npm run serve:ssr` → done.
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🧩 What’s inside
+1. SEO-first SSR pages (Angular Universal)  
+2. Mobile-first Tailwind UI  
+3. Real-time progress via WebSocket (optional)  
+4. Swap backends in 5 s (edit `environment.ts`)  
+5. Modular services: `DirectDownloadService`, `StreamDownloadService`, `SeparatedAvService` – pick one or use all.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 📦 Quick start (Direct mode)
 
-```bash
-ng generate component component-name
-```
+git clone https://github.com/Saadnadeemch/downloader-frontend.git
+cd downloader-frontend
+npm install
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+# 1. point to your backend
+# src/environments/environment.ts
+export const environment = {
+  production: false,
+  apiUrl: 'https://my-go-backend.com/api'
+};
 
-```bash
-ng generate --help
-```
+# 2. dev with SSR
+npm run build:ssr && npm run serve:ssr
+# → http://localhost:4000
+🔌 Backend endpoints you need
+Table
+Copy
+Mode	Endpoint	Method	Payload / Query	Response
+Direct	/api/video	GET	?url=YOUTUBE_URL	metadata JSON
+Direct	/api/proxy-download	POST	{url, formatId}	file stream
+Stream	/ws/progress	WebSocket	{taskId}	{percent, eta, speed}
+Separated AV	/api/merge	POST	{videoUrl, audioUrl}	merged file stream
+Replace /api prefix with your own by changing apiUrl.
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+🎨 Customise in 30 s
+Table
+Copy
+What	Where
+Theme colours	tailwind.config.js → extend.colors
+Search filters	src/app/features/search/search.component.ts
+Progress bar style	src/app/ui/progress-bar.component.ts
+Add new backend	create YourBackendService implements DownloadAdapter
+🚢 Production deploy
+bash
+Copy
+npm run build:ssr        # dist/ ready
+npm run serve:ssr         # Node cluster on :4000
+# or docker
+docker build -t downloader-front .
+docker run -p 4000:4000 downloader-front
+Put Caddy / Nginx in front:
+Copy
+example.com {
+    reverse_proxy localhost:4000
+}
+🔍 SEO checklist (already done)
+✅ Server-rendered routes (/video/:id)
+✅ Dynamic meta tags (title, description, og:image)
+✅ JSON-LD structured data
+✅ Pre-render script for 404 & canonical URLs
